@@ -1,4 +1,4 @@
-# Malaria-Cell-Classification-Using-Neural-Networks
+# Malaria Cell Classification Using Neural Networks
 
 A. Overview
 
