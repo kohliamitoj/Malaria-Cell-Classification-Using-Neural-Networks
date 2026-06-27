@@ -1,0 +1,21 @@
+# TensorFlow 2.16+ supports Python 3.9-3.12 and Apple Silicon (arm64) natively.
+# Do NOT use Python 3.13+ — TensorFlow is not compatible with it yet.
+# Note: tensorflow-metal (Apple Silicon GPU) only works with TF 2.13–2.16.
+#       TF 2.17+ runs on CPU only on Mac. Use Google Colab for GPU training.
+tensorflow>=2.16.0
+keras>=3.0.0
+numpy
+pandas
+scikit-learn
+matplotlib
+opencv-python
+tqdm
+tabulate
+ipykernel
+ipywidgets
+tensorboard
+# ── Streamlit app ──
+streamlit>=1.35.0
+plotly>=5.18.0
+gdown>=5.1.0
+Pillow>=10.0.0

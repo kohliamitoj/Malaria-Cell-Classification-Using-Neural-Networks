@@ -1,0 +1,143 @@
+===============================================================
+  Malaria Cell Classification — Quick Start (VS Code)
+===============================================================
+
+PREREQUISITES
+-------------
+- Python 3.11 or 3.12  (TensorFlow does NOT support 3.13+ yet)
+  On Apple Silicon Macs, python3.11 is recommended.
+- VS Code with the "Jupyter" extension installed
+  (Extension ID: ms-toolsai.jupyter)
+
+
+STEP 1 — CREATE A VIRTUAL ENVIRONMENT
+--------------------------------------
+IMPORTANT: Use python3.11 (or python3.12), NOT the system python3.
+Open a terminal in this folder and run:
+
+    python3.11 -m venv venv
+    source venv/bin/activate          # macOS / Linux
+    # OR
+    venv\Scripts\activate             # Windows
+
+If you already created a venv with the wrong Python version, delete it first:
+    rm -rf venv
+Then re-run the python3.11 command above.
+
+
+STEP 2 — INSTALL DEPENDENCIES
+-------------------------------
+    pip install --upgrade pip
+    pip install -r requirements.txt
+
+
+STEP 3 — PREPARE THE DATASET
+------------------------------
+Place cell_images.zip (downloaded from the NIH Malaria dataset or
+your Google Drive) in this same folder.
+
+Expected structure after extraction (done automatically by the notebook):
+
+    cell_images/
+      Parasitized/   <- ~13,779 .png cell images
+      Uninfected/    <- ~13,779 .png cell images
+
+If you already have the extracted folder, just make sure it sits here
+next to the notebook — the notebook will skip extraction automatically.
+
+Dataset source:
+  https://www.kaggle.com/datasets/iarunava/cell-images-for-detecting-malaria
+  (or the official NIH repository)
+
+
+STEP 4 — SELECT THE KERNEL IN VS CODE
+---------------------------------------
+1. Open IE7615_Project_Malaria_Cell_Classification.ipynb in VS Code.
+2. Click "Select Kernel" (top-right of the notebook).
+3. Choose "Python Environments" -> select the venv you created above.
+   (It should appear as something like ./venv/bin/python)
+
+
+STEP 5 — RUN THE NOTEBOOK
+---------------------------
+Run cells top to bottom with "Run All" or Shift+Enter cell by cell.
+
+Cell execution order:
+  1.  Imports
+  2.  (Note cell — no action needed)
+  3.  Dataset extraction / skip if already extracted
+  4.  Verify folder contents
+  5.  Build image DataFrame
+  6.  Visualise sample images
+  7.  Check class balance
+  8.  (Section header)
+  9.  Train/test split
+  10. ImageDataGenerator (augmentation)
+  11. Callbacks
+  12. Validation generator
+  ... model definitions and training follow.
+
+
+NOTES
+------
+- Training all four models end-to-end can take 30–90 minutes on CPU.
+  On Apple Silicon, TensorFlow uses the Metal GPU backend automatically
+  once tensorflow is installed — no extra steps needed.
+- On NVIDIA GPUs (Linux/Windows): install tensorflow[and-cuda] instead
+  of plain tensorflow.
+- The VGG19 best model is saved as vgg19_malaria.keras in this folder
+  after the VGG training cell runs.
+- The early-stopping patience is set to 2 epochs, so models may stop
+  before reaching epoch 5 if validation loss stops improving.
+
+
+===============================================================
+  STREAMLIT PORTFOLIO APP — DEPLOYMENT GUIDE
+===============================================================
+
+STEP 6 — RUN LOCALLY FIRST
+----------------------------
+With the venv activated:
+
+    streamlit run app.py
+
+The app opens at http://localhost:8501
+The app needs vgg19_malaria.keras in the same folder to make
+predictions. Run the full notebook (through the VGG training cell)
+first to generate this file.
+
+
+STEP 7 — DEPLOY TO STREAMLIT CLOUD (free public URL)
+------------------------------------------------------
+1. UPLOAD THE MODEL TO GOOGLE DRIVE
+   - Upload vgg19_malaria.keras to your Google Drive.
+   - Right-click → Share → "Anyone with the link" → Copy link.
+   - The file ID is the long string between /d/ and /view in the URL.
+     e.g. https://drive.google.com/file/d/1AbCdEfGhIj.../view
+                                              ^^^^^^^^^^^^^ this part
+
+2. PUSH TO GITHUB
+   - Create a new public GitHub repository.
+   - Push this entire Submission folder to it.
+   - DO NOT commit vgg19_malaria.keras (it is ~500 MB; use .gitignore).
+
+3. CREATE .gitignore (in this folder):
+       vgg19_malaria.keras
+       cell_images/
+       cell_images.zip
+       venv/
+       __pycache__/
+       *.h5
+       logs/
+
+4. CONNECT TO STREAMLIT CLOUD
+   - Go to https://share.streamlit.io and sign in with GitHub.
+   - Click "New app" → choose your repo → set Main file = app.py.
+   - Under "Advanced settings" → Secrets, paste:
+         GDRIVE_MODEL_ID = "1AbCdEfGhIj..."
+   - Click Deploy. Your app gets a free URL:
+         https://your-app-name.streamlit.app
+
+5. DONE — share the URL in your portfolio!
+
+===============================================================

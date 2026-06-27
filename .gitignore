@@ -1,0 +1,10 @@
+vgg19_malaria.keras
+model.*.keras
+cell_images/
+cell_images.zip
+venv/
+__pycache__/
+*.pyc
+logs/
+.DS_Store
+.streamlit/secrets.toml
